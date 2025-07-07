@@ -1,20 +1,51 @@
 <div class="d-flex justify-content-center align-items-center outer-div">
-  <div class="inner-div">
-    <form >
-      <h2><i class="fa-solid fa-bullseye" style="color: red; margin-right: 0.5rem;"></i>Office Dart Competition</h2>
-      <h3>Sign in to your account</h3>
+  @if (!showSignupPage) {
+    <div class="inner-div">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="pt-6 pb-4">
+        <h2 class="heading-2 mb-3"><i class="fa-solid fa-bullseye" style="color: red; margin-right: 0.75rem;"></i>Office Dart Competition</h2>
+        <h3 class="heading-3 mt-2 mb-0 fw-normal">Sign in to your account</h3>
+      </div>
       <p>
-        <label for="email" style="text-align: left;">Email</label>
-        <input type="text" style="text-align: left;" id="email" placeholder="Enter your email">
+        <label for="email" style="text-align: left; display: block;">Email</label>
+        <input type="text" class="mt-2 py-2 px-2 input-field" id="email" placeholder="Enter your email" formControlName="loginEmail">
       </p>
       <p>
-        <label for="password" style="text-align: left;">Password</label>
-        <input type="password" style="text-align: left;" id="password" placeholder="Enter your password">
+        <label for="password" style="text-align: left; display: block;">Password</label>
+        <input type="password" class="mt-2 py-2 px-2 input-field" id="password" placeholder="Enter your password" formControlName="loginPassword">
       </p>
-      <button type="submit" class="btn btn-primary">Sign In</button>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
     </form>
-    <h3>Don't have an account?</h3>
-    <p>Create one here</p>
+    <h3 class="heading-3 mt-3 fw-normal">Don't have an account?</h3>
+    <button (click)="toggleSignupLoginPage()"><p class="text-primary">Create one here</p></button>
   </div>
-
+  }@else {
+  <div class="inner-div">
+    <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
+      <div class="pt-6 pb-4">
+        <h2 class="heading-2 mb-3"><i class="fa-solid fa-bullseye" style="color: red; margin-right: 0.75rem;"></i>Office Dart Competition</h2>
+        <h3 class="heading-3 mt-2 mb-0 fw-normal">Create a new account</h3>
+      </div>
+      <p>
+        <label for="fullName" style="text-align: left; display: block;">Full Name</label>
+        <input type="text" class="mt-2 py-2 px-2 input-field" id="fullName" placeholder="Enter your full name" formControlName="fullName">
+      </p>
+      <p>
+        <label for="email" style="text-align: left; display: block;">Email</label>
+        <input type="text" class="mt-2 py-2 px-2 input-field" id="email" placeholder="Enter your email" formControlName="email">
+      </p>
+      <p>
+        <label for="password" style="text-align: left; display: block;">Password</label>
+        <input type="password" class="mt-2 py-2 px-2 input-field" id="password" placeholder="Enter your password" formControlName="password">
+      </p>
+      <p>
+        <label for="organisation" style="text-align: left; display: block;">Organisation</label>
+        <input type="text" class="mt-2 py-2 px-2 input-field" id="organisation" placeholder="Enter your organisation name" formControlName="organisation">
+      </p>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+    </form>
+    <h3 class="heading-3 mt-3 fw-normal">Already have an account?</h3>
+    <button (click)="toggleSignupLoginPage()"><p class="text-primary">Sign in here</p></button>
+  </div>
+  }
 </div>

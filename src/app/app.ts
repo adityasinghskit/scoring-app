@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
-import { Login } from "./login/login";
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
+import { Loader } from "./loader/loader";
+import { LoaderService } from './loader-sevice';
 @Component({
   selector: 'app-root',
-  imports: [Login, RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, Loader],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
+  loaderService = inject(LoaderService);
   protected title = 'scoring-app';
 }

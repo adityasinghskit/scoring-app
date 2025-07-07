@@ -1,0 +1,41 @@
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full viewport height */
+  width: 100vw;  /* Full viewport width */
+  position: fixed; /* Keep it on top of other content */
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+  z-index: 9999; /* Ensure it's on top */
+}
+
+.loader-icon {
+  font-size: 4rem; /* Adjust size as needed */
+  color: red;
+  margin-bottom: 1rem;
+  animation: pulse 1.5s infinite ease-in-out; /* Optional: add a pulsing animation */
+}
+
+.loader-text {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: bold;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
