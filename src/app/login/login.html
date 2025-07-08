@@ -14,7 +14,10 @@
         <label for="password" style="text-align: left; display: block;">Password</label>
         <input type="password" class="mt-2 py-2 px-2 input-field" id="password" placeholder="Enter your password" formControlName="loginPassword">
       </p>
-      <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+      @if (loginErrorMessage) {
+        <p style="color: red;">{{loginErrorMessage}}</p>
+      }
+      <button type="submit" class="btn btn-primary" style="width: 100%;" [disabled]="loginForm.invalid">Sign In</button>
     </form>
     <h3 class="heading-3 mt-3 fw-normal">Don't have an account?</h3>
     <button (click)="toggleSignupLoginPage()"><p class="text-primary">Create one here</p></button>
@@ -29,20 +32,35 @@
       <p>
         <label for="fullName" style="text-align: left; display: block;">Full Name</label>
         <input type="text" class="mt-2 py-2 px-2 input-field" id="fullName" placeholder="Enter your full name" formControlName="fullName">
+        @if (signupForm.controls.fullName.touched && signupForm.controls.fullName.invalid) {
+        <p style="color: red;">fullName is mandatory</p>
+        }
       </p>
       <p>
         <label for="email" style="text-align: left; display: block;">Email</label>
         <input type="text" class="mt-2 py-2 px-2 input-field" id="email" placeholder="Enter your email" formControlName="email">
+        @if (signupForm.controls.email.touched && signupForm.controls.email.dirty && signupForm.controls.email.invalid) {
+        <p style="color: red;">Email is invalid</p>
+        }
       </p>
       <p>
         <label for="password" style="text-align: left; display: block;">Password</label>
         <input type="password" class="mt-2 py-2 px-2 input-field" id="password" placeholder="Enter your password" formControlName="password">
+        @if (signupForm.controls.password.touched && signupForm.controls.password.dirty && signupForm.controls.password.invalid) {
+        <p style="color: red;">Password is invalid - must be 8 characters long</p>
+        }
       </p>
       <p>
         <label for="organisation" style="text-align: left; display: block;">Organisation</label>
         <input type="text" class="mt-2 py-2 px-2 input-field" id="organisation" placeholder="Enter your organisation name" formControlName="organisation">
+        @if (signupForm.controls.organisation.touched && signupForm.controls.organisation.invalid) {
+        <p style="color: red;">Organisation is mandatory</p>
+        }
       </p>
-      <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+      @if (signupErrorMessage) {
+        <p style="color: red;">{{signupErrorMessage}}</p>
+      }
+      <button type="submit" class="btn btn-primary" style="width: 100%;" [disabled]="signupForm.invalid">Create Account</button>
     </form>
     <h3 class="heading-3 mt-3 fw-normal">Already have an account?</h3>
     <button (click)="toggleSignupLoginPage()"><p class="text-primary">Sign in here</p></button>

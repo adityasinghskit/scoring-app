@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 export class Login implements OnInit{
   private supabase = inject(Supabase);
   private router = inject(Router);
+  loginErrorMessage: string | null = null;
+  signupErrorMessage: string | null = null;
   showSignupPage: boolean = false;
   signupForm = new FormGroup({
     fullName: new FormControl('', {validators: [Validators.required]}),
@@ -33,11 +35,11 @@ export class Login implements OnInit{
   }
 
   async onSignup(){
-    let errorMessage: string | null = null;
     const result = await this.supabase.signup(this.signupForm.controls.email.value || '', this.signupForm.controls.password.value || '',
       this.signupForm.controls.fullName.value || '', this.signupForm.controls.organisation.value || '');
+      console.log(this.signupForm);
     if(result.error){
-      errorMessage = result.error;
+      this.signupErrorMessage = result.error;
     }else{
       // window.alert('User signed up!');
       this.router.navigate(['/dashboard']);
@@ -45,10 +47,10 @@ export class Login implements OnInit{
   }
 
   async onLogin(){
-  let errorMessage: string | null = null;
     const result = await this.supabase.login(this.loginForm.controls.loginEmail.value || '', this.loginForm.controls.loginPassword.value || '');
+    console.log(this.loginForm);
     if(result.error){
-      errorMessage = result.error;
+      this.loginErrorMessage = result.error;
     }else{
       // window.alert('User logged in!');
       this.router.navigate(['/dashboard']);
