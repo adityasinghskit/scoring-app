@@ -6,6 +6,7 @@ import {
 } from '@supabase/supabase-js'
 import { environment } from '../environments/environment'
 import { LoaderService } from './loader-sevice';
+import { throwError } from 'rxjs';
 export interface Member{
   id:string,
   name:string
@@ -113,6 +114,20 @@ export class Supabase {
       return { error: 'Error loading members' };
     } finally{
       this.loaderService.hide();
+    }
+  };
+
+  async removeMember(id: string):Promise<any>{
+    try {
+      const { error } = await this.supabase
+        .from('members')
+        .delete()
+        .eq('id', id);
+
+      if (error) return { error: 'Failed to remove member' };
+      return {};
+    } catch (error) {
+      return { error: 'Failed to remove member' };
     }
   };
 
