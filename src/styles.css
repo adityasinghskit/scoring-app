@@ -1,3 +1,9 @@
+.heading-1{
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
 .heading-2{
   font-size: 1.5rem;
   line-height: 2rem;
@@ -30,4 +36,65 @@ width: 100%;
 border: none;
 border-radius: 5px;
 background-color: #E8F0FE;
+}
+.input-field-2{
+text-align: left;
+border: 2px;
+border-color: grey;
+border-radius: 5px;
+box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+padding: 8px 12px;
+}
+.p-grey{
+  color: #4B5563;
+  font-size: 14px;
+}
+.body-div{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  grid-gap: 30px;
+  margin: auto;
+}
+.card{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.card-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 20px 20px;
+}
+.card p:nth-child(2){
+  font-size: 20px;
+  font-weight: 600;
+}
+.card-row-index {
+  border-color: grey;
+  border-width: 2px;
+  border-radius: 10px;
+  margin-right: 10px;
+  background-color: aliceblue;
+  padding: 5px 10px;
+}
+
+.highlight-even {
+  background-color: #f0f8ff;
+}
+
+.highlight-odd {
+  background-color: #e0f0ff;
 }

@@ -52,6 +52,7 @@ export class Login implements OnInit{
     if(result.error){
       this.loginErrorMessage = result.error;
     }else{
+
       // window.alert('User logged in!');
       this.router.navigate(['/dashboard']);
     }

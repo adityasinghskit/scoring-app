@@ -1,0 +1,42 @@
+<div class="outer-div">
+  <div class="pt-3" style="width: 70%; margin: auto;">
+    <div style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
+      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Member Management</h3>
+    </div>
+    <div class="mt-4" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+      <div class="p-3">
+        <h3>+ Add New Member</h3>
+      </div>
+      <div class="px-3 pb-3">
+        <div style="display: flex; gap: 20px;">
+          <input class="input-field-2" style="flex-grow: 1;" type="text" placeholder="Enter member name..">
+          <button class="btn btn-primary" style="width: 200px;">+ Add New Member</button>
+        </div>
+        <div class="pt-2">
+          <p class="p-grey">9/30 members added</p>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+      <div class="p-3">
+        <h3>Current Members</h3>
+      </div>
+      <div class="body-div">
+        @for (item of members(); track $index) {
+        <div class="card-row">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <div class="card-row-index"
+              [class.highlight-even]="($index+1)%2===0"
+              [class.highlight-odd]="($index+1)%2!==0">
+              {{$index+1}}
+            </div>
+            <p style="margin-bottom: 0;">{{item.name}}</p>
+          </div>
+          <div><i class="fa-solid fa-trash" style="color: red;"></i></div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

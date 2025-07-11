@@ -1,14 +1,15 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
-  AuthChangeEvent,
   AuthSession,
   createClient,
-  Session,
   SupabaseClient,
-  User,
 } from '@supabase/supabase-js'
 import { environment } from '../environments/environment'
 import { LoaderService } from './loader-sevice';
+export interface Member{
+  id:string,
+  name:string
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -82,6 +83,7 @@ export class Supabase {
       }
 
       localStorage.setItem('user_id', data.id);
+      localStorage.setItem('user_email', data.email);
 
       return {};
     } catch (error: any) {
@@ -91,5 +93,28 @@ export class Supabase {
       this.loaderService.hide();
     }
   };
+
+  async loadMembers(): Promise<Member[]|any>{
+    try {
+      this.loaderService.show();
+      const { data, error } = await this.supabase
+        .from('members')
+        .select('id, name')
+        .eq('user_id', localStorage.getItem('user_id'));
+
+      if (error || !data) {
+        // console.error('Error loading members:', error);
+        return { error: 'Error loading members' };
+      };
+
+      return data;
+    } catch (error:any) {
+      // console.error('Error loading members:', error);
+      return { error: 'Error loading members' };
+    } finally{
+      this.loaderService.hide();
+    }
+  };
+
 
 }
