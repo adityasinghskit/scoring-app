@@ -9,8 +9,8 @@
         <div>
           <div style="flex-grow: 1; flex-direction: column; justify-content: flex-start; align-items: flex-end; text-align: right;">
             <p class="mb-1">Welcome back,</p>
-            <p class="mb-1">Name</p>
-            <p class="mb-1">Company</p>
+            <p class="mb-1">{{user_name()}}</p>
+            <p class="mb-1">{{user_org()}}</p>
           </div>
         </div>
       </div>
@@ -19,7 +19,7 @@
           <h3>Track your weekly dart tournaments with ease</h3>
         </div>
         <div style="flex-grow: 1; justify-content: flex-start; align-items: center; text-align: right;">
-          <button class="btn btn-danger" style="height: auto; width: auto;"><p><i class="fa-solid fa-right-from-bracket"></i>Logout</p></button>
+          <button class="btn btn-danger" style="height: auto; width: auto;" (click)="logout()"><p style="margin-bottom: 0;"><i class="fa-solid fa-right-from-bracket"></i>Logout</p></button>
         </div>
       </div>
     <!-- </div> -->
@@ -30,7 +30,7 @@
 <div class="body-div" style="width: 70%; margin: auto;">
   <div class="card">
     <p><i class="fa-solid fa-users" style="color: #2563EB; font-size: 30px;"></i></p>
-    <h3>0</h3>
+    <h3>{{members().length}}</h3>
     <p>Total Members</p>
   </div>
   <div class="card">

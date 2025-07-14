@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, OnInit, signal } from '@angular/core';
 import {
   AuthSession,
   createClient,
@@ -7,6 +7,7 @@ import {
 import { environment } from '../environments/environment'
 import { LoaderService } from './loader-sevice';
 import { throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 export interface Member{
   id:string,
   name:string
@@ -14,12 +15,15 @@ export interface Member{
 @Injectable({
   providedIn: 'root'
 })
-export class Supabase {
+export class Supabase{
   private loaderService = inject(LoaderService);
   private supabase: SupabaseClient;
+  private snackBar = inject(MatSnackBar);
+  user_id = signal('');
   _session: AuthSession | null = null
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
+    this.user_id.set(localStorage.getItem('user_id') || '');
   }
   get session() {
     this.supabase.auth.getSession().then(({ data }) => {
@@ -85,6 +89,8 @@ export class Supabase {
 
       localStorage.setItem('user_id', data.id);
       localStorage.setItem('user_email', data.email);
+      localStorage.setItem('user_name', data.name);
+      localStorage.setItem('user_org', data.organisation);
 
       return {};
     } catch (error: any) {
@@ -104,13 +110,11 @@ export class Supabase {
         .eq('user_id', localStorage.getItem('user_id'));
 
       if (error || !data) {
-        // console.error('Error loading members:', error);
         return { error: 'Error loading members' };
       };
 
       return data;
     } catch (error:any) {
-      // console.error('Error loading members:', error);
       return { error: 'Error loading members' };
     } finally{
       this.loaderService.hide();
@@ -130,6 +134,42 @@ export class Supabase {
       return { error: 'Failed to remove member' };
     }
   };
+
+  async addMember(newMemberName:string, members: Member[]): Promise<any>{
+    if (!newMemberName.trim()) {
+      return {error: 'Please enter a member name'};
+    }
+
+    if (members.some(m => m.name.toLowerCase() === newMemberName.toLowerCase())) {
+      return {error: 'A member with this name already exists'};
+    }
+
+    this.loaderService.show();
+    try {
+      const { data, error } = await this.supabase
+        .from('members')
+        .insert([
+          {
+            name: newMemberName.trim(),
+            user_id: this.user_id()
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) return { error: 'Failed to add member' };
+
+      const newMember = {
+        id: data.id,
+        name: data.name
+      };
+      return {newMember};
+    } catch (error) {
+      return {error: 'Error adding member:'};
+    } finally {
+      this.loaderService.hide();
+    }
+  }
 
 
 }
