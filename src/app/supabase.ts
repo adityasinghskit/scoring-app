@@ -8,6 +8,7 @@ import { environment } from '../environments/environment'
 import { LoaderService } from './loader-sevice';
 import { throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Team } from './teams/teams';
 export interface Member{
   id:string,
   name:string
@@ -166,6 +167,55 @@ export class Supabase{
       return {newMember};
     } catch (error) {
       return {error: 'Error adding member:'};
+    } finally {
+      this.loaderService.hide();
+    }
+  }
+
+  async createMatch(){
+    try {
+        this.loaderService.show();
+        const { data, error } = await this.supabase
+          .from('matches')
+          .insert([{ user_id: localStorage.getItem('user_id') }])
+          .select()
+          .single();
+
+        if (error) return { error: 'Failed to create match' };
+        localStorage.setItem('match_id',data.id);
+        return data;
+    } catch (error) {
+      return { error: 'Failed to create match' };
+    } finally{
+      this.loaderService.hide();
+    }
+  };
+
+  async addTeam(newTeams: Team[]):Promise<any>{
+    this.loaderService.show();
+    const matchId = localStorage.getItem('match_id');
+    try {
+      // Delete existing teams for this match
+      await this.supabase
+        .from('teams')
+        .delete()
+        .eq('match_id', matchId);
+
+      // Insert new teams
+      const teamsToInsert = newTeams.map(team => ({
+        name: team.name,
+        members: team.members.map(m => m.id),
+        match_id: matchId
+      }));
+
+      const { error } = await this.supabase
+        .from('teams')
+        .insert(teamsToInsert);
+
+      if (error) return { error: 'Failed to add team' };
+
+    } catch (error) {
+      return {error: 'Error adding team:'};
     } finally {
       this.loaderService.hide();
     }

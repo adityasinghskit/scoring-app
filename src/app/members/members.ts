@@ -21,10 +21,10 @@ export class Members implements OnInit{
     const result = await this.supabase.loadMembers();
     if(result.error){
       console.error(result.error);
-      this.snackBar.open('Failed to load members', 'close', {duration: 2000});
+      this.snackBar.open('Failed to load members', 'close', {duration: 2000, panelClass: ['global-snackbar']});
     }
     this.members.set(result);
-    this.snackBar.open('Members loaded', 'close', {duration: 2000});
+    this.snackBar.open('Members loaded', 'close', {duration: 2000, panelClass:['global-snackbar']});
   }
   async deleteMember(member: Member){
     const response = await this.supabase.removeMember(member.id);
@@ -45,7 +45,8 @@ export class Members implements OnInit{
       this.snackBar.open(response.error, 'close', {duration: 2000});
     }else{
       this.members.update(prev=> [response.newMember, ...prev]);
-      this.snackBar.open(`${response.newMember} added to the competition`, 'close', {duration: 2000});
+      this.newMemberName.set('');
+      this.snackBar.open(`${response.newMember.name} added to the competition`, 'close', {duration: 2000});
     }
   }
 }

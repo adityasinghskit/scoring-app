@@ -1,0 +1,74 @@
+<div class="outer-div">
+  <div class="pt-3" style="width: 90%; margin: auto;">
+    <div style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
+      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Team Setup</h3>
+    </div>
+    @if(members().length==0){
+    <div class="mt-4 px-6 py-12" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; text-align: center; padding: 2rem 3rem;">
+      <i class="fa-solid fa-users" style="color: #2563EB; font-size: 40px; margin-bottom: 20px;"></i>
+      <h3>No Members Found</h3>
+      <p>You need to add members before setting up teams.</p>
+      <button class="btn btn-light" routerLink="/members">Go Back to Add Members</button>
+    </div>
+    }
+    @else {
+    <div class="mt-4" style="display: flex; align-items: flex-start; gap: 25px;">
+      <div style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; flex: 1; padding: 20px; height: 500px;">
+        <h3 style="margin-bottom: 20px;">Team Configuration</h3>
+        <p>Number of Teams</p>
+        <select name="team-size" id="team-size" style="width: 100%; border-radius: 5px; padding: 5px;" [(ngModel)]="selectedTeamSize">
+          <option [value]="2" selected>2 Teams</option>
+          <option [value]="3">3 Teams</option>
+          <option [value]="4">4 Teams</option>
+          <option [value]="5">5 Teams</option>
+        </select>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" (click)="shuffleMembers()">
+          <i class="fa-solid fa-arrows-turn-right" style="color: white; font-size: 15px;"></i> Random Assignment
+        </button>
+        <button class="btn btn-light" style="width: 100%; margin-top: 20px;" (click)="saveTeam(teams())">
+          Save Teams
+        </button>
+        <p style="margin-top: 1.5rem;">Total Members: {{members().length}}</p>
+        <p>Members per team: ~{{removeDecimal(members().length/selectedTeamSize())}}</p>
+      </div>
+      <div style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; flex: 1; padding: 20px; height: 500px;">
+        <h3 style="margin-bottom: 20px;">Manual Assignment</h3>
+        <div style="display: flex; flex-direction: column; gap: 20px; height: 400px; overflow-y: scroll; padding-top: 5px;">
+        @for (member of members(); track $index) {
+          <div class="team-member-card">
+            <p style="font-weight: 700;">{{member.name}}</p>
+              <select name="selectTeam" id="selectTeam" style="border-radius: 5px; padding: 3px;"
+              [(ngModel)]="teamAssignment()[member.id]">
+              @for (index of teamIndexes; track index) {
+                <option [value]="index">
+                  Team {{ getTeamCharacter(index) }}
+                </option>
+              }
+            </select>
+          </div>
+        }
+        </div>
+      </div>
+      <div style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; flex: 1; padding: 20px; height: 500px;">
+        <h3 style="margin-bottom: 20px;">Current Teams</h3>
+        <div class="current-team-card" style="height: 400px; overflow-y: scroll;">
+        @for (item of teamIndexes; track $index) {
+            <div>
+              <p style="font-weight: 700; margin-bottom: 8px;">Team {{ getTeamCharacter($index) }}</p>
+              <p style="margin-bottom: 8px;">{{getTeamMember(item+'').length}} Members</p>
+              <ul>
+                @for (member of getTeamMember(item+''); track $index) {
+                  <li>
+                    {{member.name}}
+                  </li>
+                }
+              </ul>
+            </div>
+        }
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

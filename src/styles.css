@@ -1,3 +1,6 @@
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 .heading-1{
   font-size: 2rem;
   line-height: 2rem;
@@ -102,5 +105,40 @@ padding: 8px 12px;
   background-color: #e0f0ff;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.team-member-card{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 5px;
+}
+
+.team-member-card p{
+  margin-bottom: 0;
+}
+
+.current-team-card{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+  align-items: flex-start;
+
+}
+.current-team-card div{
+  padding: 15px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.global-snackbar {
+  --mdc-snackbar-container-color: #fdfdfd;
+  --mdc-snackbar-supporting-text-color: #000000;
+  --mdc-snackbar-action-color: #858585;
+
+  max-width: 400px;
+  min-width: 200px;
+
+}
