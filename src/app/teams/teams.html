@@ -17,7 +17,7 @@
       <div style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; flex: 1; padding: 20px; height: 500px;">
         <h3 style="margin-bottom: 20px;">Team Configuration</h3>
         <p>Number of Teams</p>
-        <select name="team-size" id="team-size" style="width: 100%; border-radius: 5px; padding: 5px;" [(ngModel)]="selectedTeamSize">
+        <select name="team-size" id="team-size" style="width: 100%; border-radius: 5px; padding: 5px;" [(ngModel)]="selectedTeamSize" (ngModelChange)="initialise()">
           <option [value]="2" selected>2 Teams</option>
           <option [value]="3">3 Teams</option>
           <option [value]="4">4 Teams</option>
@@ -39,7 +39,9 @@
           <div class="team-member-card">
             <p style="font-weight: 700;">{{member.name}}</p>
               <select name="selectTeam" id="selectTeam" style="border-radius: 5px; padding: 3px;"
-              [(ngModel)]="teamAssignment()[member.id]">
+              [(ngModel)]="teamAssignment()[member.id]"
+              (ngModelChange)="onMemberTeamChange(member, teamAssignment()[member.id])">
+              <option value="" selected> Team</option>
               @for (index of teamIndexes; track index) {
                 <option [value]="index">
                   Team {{ getTeamCharacter(index) }}

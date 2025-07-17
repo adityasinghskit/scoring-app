@@ -9,9 +9,16 @@ import { LoaderService } from './loader-sevice';
 import { throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Team } from './teams/teams';
+import { Members } from './members/members';
 export interface Member{
   id:string,
   name:string
+}
+export interface TeamData{
+  id: string;
+  name: string;
+  members: Member[];
+  totalScore: number;
 }
 @Injectable({
   providedIn: 'root'
@@ -189,7 +196,7 @@ export class Supabase{
     } finally{
       this.loaderService.hide();
     }
-  };
+  }
 
   async addTeam(newTeams: Team[]):Promise<any>{
     this.loaderService.show();
@@ -221,5 +228,40 @@ export class Supabase{
     }
   }
 
+  async loadTeams(matchId: string, members: Member[]): Promise<TeamData[]|any>{
+    try {
+      let memberNameRecord: Record<string, string> = {};
+      members.forEach(mem => memberNameRecord[mem.id] = mem.name);
+      this.loaderService.show();
+      const { data, error } = await this.supabase
+        .from('teams')
+        .select('id, name, members')
+        .eq('match_id', matchId);
+
+      if (error) return { error: 'Failed to load team' };
+      console.log('Loaded Teams:', data);
+
+      let teamsWithMembers: TeamData[] = [];
+       data.forEach(team => {
+        let teamMembers: Member[]=[];
+        team.members.forEach((memId: string) => {
+          if (memberNameRecord[memId]) {
+            teamMembers.push({ id: memId, name: memberNameRecord[memId] });
+          }
+        });
+        teamsWithMembers.push({
+        id: team.id,
+        name: team.name,
+        members: teamMembers,
+        totalScore: 0
+        })
+      });
+      return teamsWithMembers;
+    } catch (error) {
+      return {error: 'Error loading team'};
+    } finally {
+      this.loaderService.hide();
+    }
+  }
 
 }
