@@ -10,10 +10,12 @@ import { throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Team } from './teams/teams';
 import { Members } from './members/members';
+import { Throw } from './score/score';
 export interface Member{
   id:string,
   name:string
 }
+
 export interface TeamData{
   id: string;
   name: string;
@@ -259,6 +261,70 @@ export class Supabase{
       return teamsWithMembers;
     } catch (error) {
       return {error: 'Error loading team'};
+    } finally {
+      this.loaderService.hide();
+    }
+  }
+
+  async saveThrows(teamScoreCard: Record<string,Throw[]>, teams: Team[]): Promise<any>{
+    if (!localStorage.getItem('match_id')) {
+      return {error: 'No Match found'};
+    }
+    const currentMatchId = localStorage.getItem('match_id');
+      // Delete existing scorecards for this match
+      await this.supabase
+        .from('scorecards')
+        .delete()
+        .eq('match_id', currentMatchId);
+
+      let scorecards: any[]=[];
+      teams.forEach((team) => {
+      let throws: Throw[] = teamScoreCard[team.name];
+      let teamScore = 0;
+      throws.forEach(t=> teamScore += t.score);
+      scorecards.push({
+        match_id: currentMatchId,
+        data: throws,
+        total: teamScore,
+        team_id: team.id
+      });
+      });
+      try {
+      // Insert new scorecard
+      const { error } = await this.supabase
+        .from('scorecards')
+        .insert(
+          scorecards
+        );
+
+      if (error) return {error: 'Error whilesaving throws'};
+      return {};
+    } catch (error) {
+      return {error: 'Error while saving throws'};
+    } finally {
+    }
+}
+
+async loadScoreBoard(matchId: string, teams: Team[]): Promise<Record<string,Throw[]>|any>{
+    try {
+      let teamNameRecord: Record<string, string> = {};
+      teams.forEach(team => teamNameRecord[team.id] = team.name);
+      this.loaderService.show();
+      const { data, error } = await this.supabase
+        .from('scorecards')
+        .select('match_id, team_id, data')
+        .eq('match_id', matchId);
+
+      if (error) return { error: 'Failed to load scoreboard' };
+      console.log('Loaded scoreboard:', data);
+
+      let loadedScoreBoard: Record<string,Throw[]> = {};
+       data.forEach(score => {
+        loadedScoreBoard[teamNameRecord[score.team_id]] = score.data;
+      });
+      return loadedScoreBoard;
+    } catch (error) {
+      return {error: 'Error loading scoreboard'};
     } finally {
       this.loaderService.hide();
     }

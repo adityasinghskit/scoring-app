@@ -2,23 +2,23 @@
 <div class="header-div pt-4 mb-2" style="width: 70%; margin: auto;">
   <!-- <div> -->
     <!-- <div style="width: 90%; margin: auto;"> -->
-      <div style="display:flex; flex-grow: 1; justify-content: space-between;">
-        <div style="flex-grow: 3; justify-content: center; align-items: centre; text-align: center;">
+      <div style="display:flex; flex: 1; justify-content: flex-start;">
+        <div style="flex: 3; justify-content: center; align-items: centre; text-align: center;">
           <h1 class="heading-1 mb-3"><i class="fa-solid fa-bullseye" style="color: red; margin-right: 0.75rem;"></i>Office Dart Competition</h1>
         </div>
         <div>
-          <div style="flex-grow: 1; flex-direction: column; justify-content: flex-start; align-items: flex-end; text-align: right;">
-            <p class="mb-1">Welcome back,</p>
+          <div style="flex-direction: column; justify-content: flex-start; align-items: flex-end; text-align: right;">
+            <p class="mb-1" style="font-size: 14px; color: #4B5563;">Welcome back,</p>
             <p class="mb-1">{{user_name()}}</p>
-            <p class="mb-1">{{user_org()}}</p>
+            <p class="mb-1" style="font-size: 14px; color: #4B5563;">{{user_org()}}</p>
           </div>
         </div>
       </div>
-      <div style="display:flex; flex-grow: 1; justify-content: space-between;">
-        <div style="flex-grow: 3; justify-content: center; align-items: center; text-align: center;">
-          <h3>Track your weekly dart tournaments with ease</h3>
+      <div style="display:flex; flex: 1; justify-content: flex-start;">
+        <div style="flex: 3; justify-content: center; align-items: center; text-align: center;">
+          <h3 style="font-size: 18px; color: #4B5563;">Track your weekly dart tournaments with ease</h3>
         </div>
-        <div style="flex-grow: 1; justify-content: flex-start; align-items: center; text-align: right;">
+        <div style="justify-content: flex-start; align-items: center; text-align: right;">
           <button class="btn btn-danger" style="height: auto; width: auto;" (click)="logout()"><p style="margin-bottom: 0;"><i class="fa-solid fa-right-from-bracket"></i>Logout</p></button>
         </div>
       </div>
@@ -59,7 +59,7 @@
     <p><i class="fa-solid fa-chart-column" style="color: #2563EB; font-size: 30px;"></i></p>
     <p>Score Match</p>
     <p>Record throws and scores</p>
-    <button class="btn btn-primary" style="width: 80%;">Score Match</button>
+    <button class="btn btn-primary" style="width: 80%;" routerLink="/score">Score Match</button>
   </div>
   <div class="card">
     <p><i class="fa-solid fa-trophy" style="color: #2563EB; font-size: 30px;"></i></p>

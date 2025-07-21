@@ -4,6 +4,7 @@ import { Login } from './login/login';
 import { Dashboard } from './dashboard/dashboard';
 import { Members } from './members/members';
 import { Teams } from './teams/teams';
+import { Score } from './score/score';
 
 export const routes: Routes = [
   {
@@ -35,5 +36,10 @@ export const routes: Routes = [
     path: 'teams',
     component: Teams,
     title: 'Team Setup'
+  },
+  {
+    path: 'score',
+    component: Score,
+    title: 'Score Board'
   }
 ];

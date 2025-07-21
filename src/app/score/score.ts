@@ -1,36 +1,33 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Member, Supabase } from '../supabase';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterLink } from '@angular/router';
+import { Team } from '../teams/teams';
 import { FormsModule } from '@angular/forms';
-
-export type Team = {
-  id: string;
-  name: string;
-  members: Member[];
-  totalScore: number;
+import { RouterLink } from '@angular/router';
+export interface Throw {
+  memberId: string;
+  throwNumber: number;
+  score: number;
 };
-
 @Component({
-  selector: 'app-teams',
+  selector: 'app-score',
   imports: [RouterLink, FormsModule],
-  templateUrl: './teams.html',
-  styleUrl: './teams.css'
+  templateUrl: './score.html',
+  styleUrl: './score.css'
 })
-export class Teams implements OnInit{
+export class Score {
   private supabase = inject(Supabase);
   private snackBar = inject(MatSnackBar);
+  private debounceTimer: any;
   selectedTeamSize = signal<number>(2);
   members =  signal<Member[]>([]);
   teams = signal<Team[]>([]);
   teamAssignment = signal<Record<string,string>>({});
-
+  teamScoreCard = signal<Record<string,Throw[]>>({});
   async ngOnInit(): Promise<void> {
     await this.loadmembers();
     if(localStorage.getItem('match_id')){
       this.loadTeams();
-    }else{
-      this.initialise();
     }
     // this.shuffleMembers();
   }
@@ -42,6 +39,7 @@ export class Teams implements OnInit{
     }
     return '';
   }
+
   initialise(){
     //create teams
     const newTeams: Team[] = [];
@@ -65,6 +63,7 @@ export class Teams implements OnInit{
     this.teamAssignment.set(teamAssign);
     console.log(this.teamAssignment());
   }
+
   async loadmembers(){
     const result = await this.supabase.loadMembers();
     if(result.error){
@@ -83,7 +82,10 @@ export class Teams implements OnInit{
     return Array.from({ length: this.selectedTeamSize() }, (_, i) => i);
   }
 
-  getTeamCharacter(index: number): string {
+  getTeamCharacter(index: number|string): string {
+    if(typeof index === 'string'){
+      return String.fromCharCode(65 + Number(index));
+    }
     return String.fromCharCode(65 + index);
   }
 
@@ -93,7 +95,7 @@ export class Teams implements OnInit{
     for (let i = 0; i < this.selectedTeamSize(); i++) {
       newTeams.push({
         id: i+'',
-        name: i+'',
+        name: i+'', // Team A, Team B, Team C
         members: [],
         totalScore: 0
       });
@@ -177,6 +179,7 @@ export class Teams implements OnInit{
     this.teams.set(updatedTeams);
     console.log('Updated Teams:', this.teams());
   }
+
   loadTeams(){
     const matchId = localStorage.getItem('match_id');
     if(!matchId){
@@ -195,9 +198,111 @@ export class Teams implements OnInit{
         });
         this.teamAssignment.set(teamAssign);
         this.selectedTeamSize.set(this.teams().length);
-        console.log('Team Assignments:', this.teamAssignment());
-        this.snackBar.open('Teams loaded', 'close', {duration: 2000, panelClass: ['global-snackbar']});
+        // let loadedScoreCardTemp: Record<string,Throw[]>= JSON.parse(localStorage.getItem('team_score_card') || '{}');
+        // let loadedScoreCardTemp = localStorage.getItem('team_score_card');
+        this.loadScoreBoard().then(loadedScoreCardTemp=>{
+          //create scorecard
+            if(!loadedScoreCardTemp){
+            this.teams().forEach(i=>{
+              let teamScoreCardTemp = signal<Record<string,Throw[]>>({});
+              let memberScoreCard: Throw[] = [];
+              i.members.forEach(i=> {
+                for(let j=1;j<4;j++){
+                memberScoreCard.push({
+                  memberId: i.id,
+                  throwNumber: j,
+                  score: 0
+                });
+              }
+              })
+              teamScoreCardTemp()[i.name]=memberScoreCard;
+              this.teamScoreCard.set({...this.teamScoreCard(), ...teamScoreCardTemp()});
+            })
+            console.log('Team Score Card: ', this.teamScoreCard());
+            }else{
+              this.teamScoreCard.set(loadedScoreCardTemp);
+            }
+        });
+
       }
-    });
+        // this.snackBar.open('Teams loaded', 'close', {duration: 2000, panelClass: ['global-snackbar']});
+      });
+  }
+
+  getMemberThrowScore(memberId: string, throwNumber: number): number {
+    const teamScore = this.teamScoreCard()[this.teamAssigedToMember(memberId)];
+    if(teamScore){
+      const throwData = teamScore.find(t => t.memberId === memberId && t.throwNumber === throwNumber);
+      return throwData ? throwData.score : 0;
+    }
+    return 0;
+  }
+
+  setMemberThrowScore(memberId: string, throwNumber: number, event: Event) {
+    const teamScore = this.teamScoreCard()[this.teamAssigedToMember(memberId)];
+    const input = event.target as HTMLInputElement;
+    let scoreValue = parseInt(input.value, 10);
+    scoreValue = isNaN(scoreValue) ? 0 : scoreValue;
+    if(teamScore){
+      const throwData = teamScore.find(t => t.memberId === memberId && t.throwNumber === throwNumber);
+      if (throwData) {
+      throwData.score = scoreValue;
+      this.teamScoreCard.set({
+        ...this.teamScoreCard(),
+        [this.teamAssigedToMember(memberId)]: teamScore
+      });
+    }
+    }
+    localStorage.setItem('team_score_card', JSON.stringify(this.teamScoreCard()));
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.saveThrows();
+      console.log('Updated Team Score Card:', this.teamScoreCard());
+    }, 1000);
+  }
+
+  saveThrows(){
+    this.supabase.saveThrows(this.teamScoreCard(), this.teams()).then(result => {
+    if(result.error){
+      console.error(result.error);
+    }else{
+      console.log('Throws saved successfully');
+    }
+  });
+  }
+
+  async loadScoreBoard(): Promise<Record<string,Throw[]>|any>{
+    const result = await this.supabase.loadScoreBoard(localStorage.getItem('match_id') ?? '', this.teams());
+      if(result.error){
+        console.error(result.error);
+        this.snackBar.open('Failed to load scoreboard', 'close', {duration: 2000, panelClass: ['global-snackbar']});
+      }
+      else{
+        localStorage.setItem('team_score_card', JSON.stringify(result));
+        console.log('Loaded Scoreboard:', result);
+        this.snackBar.open('Scoreboard loaded', 'close', {duration: 2000, panelClass: ['global-snackbar']});
+      }
+      return result;
+  }
+
+  getMemberTotalScore(memberId: string): number {
+    const teamScore = this.teamScoreCard()[this.teamAssigedToMember(memberId)];
+    let totalScore=0;
+    if(teamScore){
+      const throwData: Throw[] = teamScore.filter(t => t.memberId === memberId);
+      throwData.forEach(t => totalScore+=t.score);
+      return totalScore;
+    }
+    return 0;
+  }
+
+  getTeamTotalScore(teamId: string): number {
+    const teamScore = this.teamScoreCard()[teamId];
+    let totalScore=0;
+    if(teamScore){
+      teamScore.forEach(t => totalScore+= t.score);
+      return totalScore;
+    }
+    return 0;
   }
 }
