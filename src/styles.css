@@ -18,6 +18,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: 1rem;
 }
 .outer-div{
+   padding: 16px;
    min-height: 100vh;
    background-color: aliceblue;
    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -52,12 +53,51 @@ padding: 8px 12px;
   color: #4B5563;
   font-size: 14px;
 }
+.body-head-div{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  column-gap: 30px;
+  margin: auto;
+  padding-bottom: 30px;
+}
+
 .body-div{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto auto auto;
   grid-gap: 30px;
   margin: auto;
+}
+
+@media screen and (width< 768px) {
+  .body-head-div{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-gap: 30px;
+  margin: auto;
+}
+}
+
+@media screen and (width< 768px) {
+  .body-div{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  grid-gap: 30px;
+  margin: auto;
+}
+}
+
+@media screen and (min-width:768px) and (max-width: 1024px) {
+  .body-div{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  grid-gap: 30px;
+  margin: auto;
+}
 }
 .card{
   display: flex;
@@ -124,8 +164,8 @@ padding: 8px 12px;
   justify-content: flex-start;
   gap: 20px;
   align-items: flex-start;
-
 }
+
 .current-team-card div{
   padding: 15px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -140,5 +180,61 @@ padding: 8px 12px;
 
   max-width: 400px;
   min-width: 200px;
+}
 
+.team-setup-body{
+  display: flex; 
+  align-items: flex-start; 
+  gap: 25px;
+}
+
+@media screen and (width< 1024px) {
+  .team-setup-body{
+  display: flex;
+  align-items: flex-start; 
+  flex-direction: column;
+  gap: 25px;
+  }
+  .team-setup-body > div {
+    width: 100%;
+  }
+}
+
+.score-heading{
+  display: flex; 
+  align-items: flex-start; 
+  gap: 25px;
+}
+.score-heading > div {
+  background-color: white; 
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; 
+  flex: 1; 
+  padding: 20px; 
+  height: auto; 
+  text-align: center;
+}
+
+@media screen and (width<768px){
+  .score-heading {
+    flex-direction: column;
+  }
+  .score-heading > div {
+    width: 100%;
+  }
+}
+
+.score-body{
+  background-color: white; 
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; 
+  padding: 20px; 
+  height: auto; 
+  text-align: left; 
+  width: 100%; 
+}
+
+@media screen and (width<768px){
+  .score-body{
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
