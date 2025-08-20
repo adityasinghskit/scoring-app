@@ -41,7 +41,6 @@ export class Login implements OnInit{
     if(result.error){
       this.signupErrorMessage = result.error;
     }else{
-      // window.alert('User signed up!');
       this.router.navigate(['/dashboard']);
     }
   }
@@ -52,8 +51,6 @@ export class Login implements OnInit{
     if(result.error){
       this.loginErrorMessage = result.error;
     }else{
-
-      // window.alert('User logged in!');
       this.router.navigate(['/dashboard']);
     }
   }

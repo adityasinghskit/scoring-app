@@ -6,11 +6,9 @@ import {
 } from '@supabase/supabase-js'
 import { environment } from '../environments/environment'
 import { LoaderService } from './loader-sevice';
-import { throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Team } from './teams/teams';
-import { Members } from './members/members';
-import { Throw } from './score/score';
+import { Throw } from './score-service';
+import { Team } from './team-service';
 export interface Member{
   id:string,
   name:string

@@ -4,7 +4,7 @@
       <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Back</button>
       <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Match Scoring</h3>
     </div>
-    @if(teams().length==0){
+    @if(teamService.teams().length==0){
     <div class="mt-4 px-6 py-12" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; text-align: center; padding: 2rem 3rem;">
       <i class="fa-solid fa-users" style="color: #2563EB; font-size: 40px; margin-bottom: 20px;"></i>
       <h3>No Teams Found</h3>
@@ -14,16 +14,16 @@
     }
     @else {
     <div class="mt-4 mb-4 score-heading">
-      @for (team of teams(); track $index) {
+      @for (team of teamService.teams(); track $index) {
         <div>
-          <h1 style="font-size: 24px; color: #4F46E5;">Team {{getTeamCharacter(team.name)}}</h1>
-          <h1 style="font-size: 30px; font-weight: 700;">{{getTeamTotalScore(team.name)}} pts</h1>
+          <h1 style="font-size: 24px; color: #4F46E5;">Team {{teamService.getTeamCharacter(team.name)}}</h1>
+          <h1 style="font-size: 30px; font-weight: 700;">{{scoreService.getTeamTotalScore(team.name)}} pts</h1>
         </div>
       }
     </div>
-    @for (team of teams(); track $index) {
+    @for (team of teamService.teams(); track $index) {
     <div class="mb-4 score-body">
-          <p style="font-size: 1.25rem; font-weight: 600;">Team {{getTeamCharacter(team.name)}} - Individual Scores</p>
+          <p style="font-size: 1.25rem; font-weight: 600;">Team {{teamService.getTeamCharacter(team.name)}} - Individual Scores</p>
           <table>
             <thead>
               <tr>
@@ -39,20 +39,20 @@
               @for (member of team.members; track $index) {
                 <tr>
                   <td style="padding-bottom: 20px; border-bottom: 2px;">{{member.name}}</td>
-                  <td style="padding-bottom: 20px; border-bottom: 2px;">
-                    <input type="text" value="{{getMemberThrowScore(member.id, 1)}}" (input)="setMemberThrowScore(member.id, 1, $event)" style="width: 100px; text-align: center;" class="form-control" placeholder="0"/>
-
-                  </td>
-                  <td style="padding-bottom: 20px; border-bottom: 2px;">
-                    <input type="text" value="{{getMemberThrowScore(member.id, 2)}}" (input)="setMemberThrowScore(member.id, 2, $event)" style="width: 100px; text-align: center;" class="form-control" placeholder="0"/>
-
-                  </td>
-                  <td style="padding-bottom: 20px; border-bottom: 2px;">
-                    <input type="text" value="{{getMemberThrowScore(member.id, 3)}}" (input)="setMemberThrowScore(member.id, 3, $event)" style="width: 100px; text-align: center;" class="form-control" placeholder="0"/>
+                  <td style="padding-bottom: 20px; border-bottom: 2px; text-align: center;">
+                    <input type="text" value="{{scoreService.getMemberThrowScore(member.id, 1)}}" (input)="scoreService.setMemberThrowScore(member.id, 1, $event)" style="width: 100px; margin: 0 auto; text-align: center;" class="form-control" placeholder="0"/>
 
                   </td>
                   <td style="padding-bottom: 20px; border-bottom: 2px; text-align: center;">
-                    {{getMemberTotalScore(member.id)}}
+                    <input type="text" value="{{scoreService.getMemberThrowScore(member.id, 2)}}" (input)="scoreService.setMemberThrowScore(member.id, 2, $event)" style="width: 100px; margin: 0 auto; text-align: center;" class="form-control" placeholder="0"/>
+
+                  </td>
+                  <td style="padding-bottom: 20px; border-bottom: 2px; text-align: center;">
+                    <input type="text" value="{{scoreService.getMemberThrowScore(member.id, 3)}}" (input)="scoreService.setMemberThrowScore(member.id, 3, $event)" style="width: 100px; margin: 0 auto; text-align: center;" class="form-control" placeholder="0"/>
+
+                  </td>
+                  <td style="padding-bottom: 20px; border-bottom: 2px; text-align: center;">
+                    {{scoreService.getMemberTotalScore(member.id)}}
                   </td>
 
                 </tr>
