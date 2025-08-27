@@ -24,6 +24,7 @@ export class TeamService {
   constructor() { }
 
   teamAssigedToMember(memberId: string){
+    // console.log('teamAssigment', this.teamAssignment());
       const teamId = this.teamAssignment()[memberId];
       if(teamId){
         return teamId;
@@ -102,7 +103,12 @@ export class TeamService {
       }
       return [];
     }
+    
     async saveTeam(teams: Team[]){
+      if(localStorage.getItem('scoring_in_progress')){
+        this.snackBar.open('Not allowed, Scoring in progress', 'close', {duration: 2000});
+        return;
+      }
       let countMember = 0;
       teams.forEach(team=>{
         countMember+=team.members.length;
@@ -111,21 +117,18 @@ export class TeamService {
         this.snackBar.open('All members not assigned to teams', 'close', {duration: 2000, panelClass: ['global-snackbar']});
         return;
       }
-      const result = await this.supabase.createMatch();
-      if(result.error){
-        console.log(result.error);
-        this.snackBar.open('Failed to create Teams', 'close', {duration: 2000, panelClass: ['global-snackbar']});
-        return;
-      }
       const resultAddTeam = await this.supabase.addTeam(teams);
       this.snackBar.open('Teams saved', 'close', {duration: 2000, panelClass: ['global-snackbar']});
       if(resultAddTeam.error){
-        console.log(result.error);
         this.snackBar.open('Failed to create Teams', 'close', {duration: 2000, panelClass: ['global-snackbar']});
       }
     }
   
     onMemberTeamChange(member: Member, newTeamId: string): void {
+      if(localStorage.getItem('scoring_in_progress')){
+        this.snackBar.open('Not allowed, Scoring in progress', 'close', {duration: 2000});
+        return;
+      }
       const currentTeams = this.teams();
       console.log('new Team Id: ', newTeamId);
       console.log('updated team assignment:', this.teamAssignment());
@@ -168,9 +171,11 @@ export class TeamService {
           console.error(result.error);
           this.snackBar.open('Failed to load teams', 'close', {duration: 2000, panelClass: ['global-snackbar']});
         }else{
+          console.log('Loaded Teams:', result);
           this.teams.set(result);
           let teamAssign: Record<string,string> = {};
           this.teams().forEach(team => {
+            console.log('Loaded Teams Inside:', team.name);
             team.members.forEach(member => teamAssign[member.id] = team.name);
           });
           this.teamAssignment.set(teamAssign);

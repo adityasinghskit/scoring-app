@@ -17,9 +17,13 @@ export class MemberService {
       this.snackBar.open('Failed to load members', 'close', {duration: 2000, panelClass: ['global-snackbar']});
     }
     this.members.set(result);
-    this.snackBar.open('Members loaded', 'close', {duration: 2000, panelClass:['global-snackbar']});
+    // this.snackBar.open('Members loaded', 'close', {duration: 2000, panelClass:['global-snackbar']});
   }
   async deleteMember(member: Member){
+    if(this.checkScoringInProgress()){
+      this.snackBar.open('Not allowed, Scoring in progress', 'close', {duration: 2000});
+      return;
+    }
     const response = await this.supabase.removeMember(member.id);
     if(response.error){
       console.error(response.error);
@@ -31,16 +35,35 @@ export class MemberService {
     }
   }
 
-  async onAddMember(){
-    const response = await this.supabase.addMember(this.newMemberName(), this.members());
+  async onAddMember(name: string){
+    if(this.checkScoringInProgress()){
+      this.snackBar.open('Not allowed, Scoring in progress', 'close', {duration: 2000});
+      return;
+    }
+    const response = await this.supabase.addMember(name, this.members());
     if(response.error){
       console.error(response.error);
       this.snackBar.open(response.error, 'close', {duration: 2000});
     }else{
       this.members.update(prev=> [response.newMember, ...prev]);
-      this.newMemberName.set('');
       this.snackBar.open(`${response.newMember.name} added to the competition`, 'close', {duration: 2000});
     }
   }
+
+  async oncreateTournament(){
+    if(localStorage.getItem('tournament_id')){return;}
+    const result = await this.supabase.createTournament();
+    let createTournamentError;
+    if(result.error){
+      console.error(result.error);
+    }else{
+      console.log('Tournament created successfully:', result);
+    }
+  }
+  
+  checkScoringInProgress(): boolean{
+    return !!localStorage.getItem('scoring_in_progress');
+  }
+
   constructor() { }
 }

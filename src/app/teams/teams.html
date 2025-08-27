@@ -4,6 +4,11 @@
       <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Back</button>
       <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Team Setup</h3>
     </div>
+    <div class="mt-4" style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
+      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/members"><i class="fa-solid fa-arrow-left"></i> Go to Members</button>
+      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/score"><i class="fa-solid fa-arrow-right"></i> Go to Score</button>
+      <!-- <button class="btn btn-success  " style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" (click)="dialogService.openConfirmDialog()"><i class="fa-solid fa-plus"></i> Create New Match</button> -->
+    </div>
     @if(memberService.members().length==0){
     <div class="mt-4 px-6 py-12" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; text-align: center; padding: 2rem 3rem;">
       <i class="fa-solid fa-users" style="color: #2563EB; font-size: 40px; margin-bottom: 20px;"></i>

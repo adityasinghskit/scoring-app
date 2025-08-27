@@ -109,6 +109,25 @@ export class Supabase{
     }
   };
 
+  async createTournament(): Promise<any> {
+    try{
+      this.loaderService.show();
+      const { data, error } = await this.supabase
+        .from('tournaments')
+        .insert([{ user_id: localStorage.getItem('user_id'),
+          name: 'tournament '+new Date().toISOString()
+         }])
+        .select()
+        .single();
+
+      if (error) return { error: 'Failed to create tournament' };
+      localStorage.setItem('tournament_id',data.id);
+      return data;
+    }finally{
+      this.loaderService.hide();
+    }
+  }
+
   async loadMembers(): Promise<Member[]|any>{
     try {
       this.loaderService.show();
@@ -120,7 +139,6 @@ export class Supabase{
       if (error || !data) {
         return { error: 'Error loading members' };
       };
-
       return data;
     } catch (error:any) {
       return { error: 'Error loading members' };
@@ -184,7 +202,9 @@ export class Supabase{
         this.loaderService.show();
         const { data, error } = await this.supabase
           .from('matches')
-          .insert([{ user_id: localStorage.getItem('user_id') }])
+          .insert([{ user_id: localStorage.getItem('user_id'),
+            tournament_id: localStorage.getItem('tournament_id')
+           }])
           .select()
           .single();
 
@@ -200,6 +220,9 @@ export class Supabase{
 
   async addTeam(newTeams: Team[]):Promise<any>{
     this.loaderService.show();
+    if(!localStorage.getItem('match_id')){
+      await this.createMatch();
+    }
     const matchId = localStorage.getItem('match_id');
     try {
       // Delete existing teams for this match
@@ -263,11 +286,13 @@ export class Supabase{
       this.loaderService.hide();
     }
   }
-
+  
   async saveThrows(teamScoreCard: Record<string,Throw[]>, teams: Team[]): Promise<any>{
     if (!localStorage.getItem('match_id')) {
       return {error: 'No Match found'};
     }
+    console.log("teamScoreCard: ", teamScoreCard["Team A"]);
+    console.log("teams: ", JSON.stringify(teams));
     const currentMatchId = localStorage.getItem('match_id');
       // Delete existing scorecards for this match
       await this.supabase
@@ -294,7 +319,6 @@ export class Supabase{
         .insert(
           scorecards
         );
-
       if (error) return {error: 'Error whilesaving throws'};
       return {};
     } catch (error) {

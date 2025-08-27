@@ -1,8 +1,12 @@
 <div class="outer-div">
   <div style="max-width: 1200px; margin: auto;">
     <div style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
-      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Go to Dashboard</button>
       <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Member Management</h3>
+    </div>
+    <div class="mt-4" style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
+      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/teams"><i class="fa-solid fa-arrow-right"></i> Go to Teams</button>
+      <!-- <button class="btn btn-success  " style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" (click)="dialogService.openConfirmDialog()"><i class="fa-solid fa-plus"></i> Create New Match</button> -->
     </div>
     <div class="mt-4" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
       <div class="p-3">
@@ -11,7 +15,7 @@
       <div class="px-3 pb-3">
           <div style="display: flex; gap: 20px;">
             <input name="memberName" class="input-field-2" style="flex-grow: 1;" type="text" placeholder="Enter member name.." [(ngModel)]="newMemberName"/>
-            <button class="btn btn-primary" style="width: 200px;" (click)="memberService.onAddMember()">+ Add New Member</button>
+            <button class="btn btn-primary" style="width: 200px;" (click)="memberService.onAddMember(newMemberName())">+ Add New Member</button>
           </div>
         <div class="pt-2">
           <p class="p-grey">{{memberService.members().length}}/30 members added</p>
