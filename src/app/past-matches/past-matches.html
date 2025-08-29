@@ -1,0 +1,96 @@
+<div class="outer-div">
+  <div style="max-width: 1200px; margin: auto;">
+    <div style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
+      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Go to Dashboard</button>
+      <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Past Matches</h3>
+    </div>
+  </div>
+  @if (pastMatches.length === 0) {
+    <div class="mt-4 px-6 py-12" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; text-align: center; padding: 2rem 3rem;">
+      <i class="fa-solid fa-users" style="color: #2563EB; font-size: 40px; margin-bottom: 20px;"></i>
+      <h3>No Past Matches Found</h3>
+      <p>Complete your first match to see the history here.</p>
+      <button class="btn btn-light" routerLink="/teams">Go Back to Setup teams</button>
+    </div>
+  } 
+  @else {
+    <div *ngFor="let match of pastMatches; let i = index" class="mt-4 px-6 py-12 match-summary" style="background-color: white; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; text-align: left; padding: 2rem 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4><i class="fa-solid fa-trophy" style="color: gold;"></i> Match: {{ getMatchCount() - i}}</h4>
+            <p style="color: rgb(75 85 99); font-size: 0.875rem; font-weight:600;">{{ match.match.inserted_at  | date:'medium' }}</p>
+        </div>
+      <!-- <h5><i class="fa-solid fa-user"></i> Teams Rankings:</h5>
+      <ul>
+        <li *ngFor="let team of match.teams">Team {{ teamService.getTeamCharacter(team.name) }}</li>
+      </ul> -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+      <div style="flex: 1">
+        <h5 style="margin-bottom: 10px;"><i class="fa-solid fa-user"></i> Scorecards:</h5>
+        <div style="display: flex; justify-content: space-between; align-items: center;" *ngFor="let scorecard of match.scorecards.slice(0,3); let i = index"
+        [ngStyle]="{
+      width: 'auto',
+      padding: '10px',
+      'margin-bottom': '5px',
+      border: '1px solid',
+      'border-radius': '5px',
+      'background-color': i === 0 ? '#fefad1' : i === 1 ? '#f5f6f8' : i === 2 ? '#ffebeb' : '#f0f0f0',
+      'border-color': i === 0 ? '#fde04b' : i === 1 ? '#d2d6dc' : i === 2 ? '#fca7a7' : '#d1d5db',
+      }">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <p [ngStyle]="{
+                  'margin-right': '20px',
+                  padding: '10px',
+                  width: '40px',
+                  height: '40px',
+                  'text-align': 'center',
+                  'border-radius': '50%',
+                  'background-color':
+                    i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? '#cd7f32' : '#f0f0f0',
+                  color: i <= 2 ? 'white' : 'black',
+                  'font-weight': 'bold'
+                }">{{ i + 1 }}</p>
+                <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                    <p style="margin: 0; font-size: 0.875rem; font-weight: 600;">Team {{ teamService.getTeamCharacter(getTeamName(scorecard.team_id ||'', match.teams)) }}</p>
+                    <p style="margin: 0; font-size: 0.875rem;">{{getMemberCount(scorecard.team_id ||'', match.teams)}} members</p>
+                </div>
+            </div>
+            <div style="font-weight: 600;">Score: {{ scorecard.total }}</div>
+        </div>
+      </div>
+      <div style="flex: 1">
+        <h5 style="margin-bottom: 10px;"><i class="fa-solid fa-bullseye"></i> Member Scores:</h5>
+        <div style="display: flex; justify-content: space-between; align-items: center;" *ngFor="let team of match.teams; let i = index"
+        [ngStyle]="{
+      width: 'auto',
+      padding: '10px',
+      'margin-bottom': '5px',
+      }">
+            <div style="display: flex; justify-content: center; align-items: flex-start; flex-grow:1;">
+              <div style="flex: 1;">
+                <p [ngStyle]="{
+                  'margin-right': '20px',
+                  'text-align': 'center',
+                  'font-weight': 'bold'
+                }">Team {{ teamService.getTeamCharacter(getTeamName(team.id ||'', match.teams)) }}
+              </p>
+                <ul style="list-style: none; padding: 0; margin: 0; width: 100%;">
+                  <li 
+                    *ngFor="let member of getMemberScores(team.members, match.scorecards)" 
+                    style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 5px 0; border-bottom: 1px solid #eee;"
+                  >
+                    <span style="font-weight: 500; text-align: left;">
+                      {{ getMemberName(member.memberId, match.members) }}
+                    </span>
+                    <span style="font-weight: 600; text-align: right;">
+                      {{ member.total }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    }
+</div>

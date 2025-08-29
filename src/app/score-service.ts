@@ -23,19 +23,20 @@ export class ScoreService {
 
   constructor() { }
 
-  getMemberThrowScore(memberId: string, throwNumber: number): number {
+  getMemberThrowScore(memberId: string, throwNumber: number): number | null {
     // console.log('Get Member Throw Score Called for memberId:', memberId, 'throwNumber:', throwNumber);
     // console.log('Current Team Score Card State:', this.teamScoreCard());
     const teamScore = this.teamScoreCard()[this.teamService.teamAssigedToMember(memberId)];
     // console.log('Team Score Data:', teamScore);
     if(teamScore){
       const throwData = teamScore.find(t => t.memberId === memberId && t.throwNumber === throwNumber);
-      return throwData ? throwData.score : 0;
+      return throwData ? throwData.score : null;
     }
-    return 0;
+    return null;
   }
 
   setMemberThrowScore(memberId: string, throwNumber: number, event: Event) {
+    throwNumber ??= 0;
     if(!localStorage.getItem('scoring_in_progress')){
       localStorage.setItem('scoring_in_progress', 'true');
     }
@@ -135,7 +136,7 @@ export class ScoreService {
           //create scorecard
             if(Object.keys(loadedScoreCardTemp).length === 0){
             console.log('Loaded Score Card Inside Inside:', loadedScoreCardTemp);
-            console.log('Teams: '+ JSON.stringify(teams));
+            // console.log('Teams: '+ JSON.stringify(teams));
             teams.forEach(i=>{
               let teamScoreCardTemp = signal<Record<string,Throw[]>>({});
               let memberScoreCard: Throw[] = [];

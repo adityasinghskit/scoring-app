@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import {Router, RouterLink} from '@angular/router'
 import { MemberService } from '../member-service';
+import { TeamService } from '../team-service';
 @Component({
   selector: 'app-dashboard',
   imports: [RouterLink],
@@ -10,6 +11,7 @@ import { MemberService } from '../member-service';
 export class Dashboard implements OnInit{
   private router = inject(Router);
   public memberService = inject(MemberService);
+  public teamService = inject(TeamService);
   user_name = signal<string|null>('');
   user_org = signal<string|null>('');
 
@@ -18,6 +20,7 @@ export class Dashboard implements OnInit{
       this.user_org.set(localStorage.getItem('user_org'));
       this.memberService.loadmembers();
       this.memberService.oncreateTournament();
+      this.teamService.loadTeams();
   }
 
   logout(){

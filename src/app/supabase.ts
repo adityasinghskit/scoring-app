@@ -38,7 +38,7 @@ export class Supabase{
       this._session = data.session
     })
     return this._session
-  }
+  } 
 
   async signup(email: string, password: string, name: string, organisation: string) {
     try {
@@ -133,8 +133,8 @@ export class Supabase{
       this.loaderService.show();
       const { data, error } = await this.supabase
         .from('members')
-        .select('id, name')
-        .eq('user_id', localStorage.getItem('user_id'));
+        .select('*')
+        .eq('user_id', this.user_id());
 
       if (error || !data) {
         return { error: 'Error loading members' };
@@ -142,6 +142,63 @@ export class Supabase{
       return data;
     } catch (error:any) {
       return { error: 'Error loading members' };
+    } finally{
+      this.loaderService.hide();
+    }
+  };
+
+  async loadMatches(): Promise<any>{
+    try {
+      this.loaderService.show();
+      const { data, error } = await this.supabase
+        .from('matches')
+        .select('*')
+        .eq('user_id', this.user_id())
+        .order('inserted_at', { ascending: false });
+      if (error || !data) {
+        return { error: 'Error loading matches' };
+      };
+      return data;
+    } catch (error:any) {
+      return { error: 'Error loading matches' };
+    } finally{
+      this.loaderService.hide();
+    }
+  };
+
+  async getTeams(matchId: string): Promise<any>{
+    try {
+      this.loaderService.show();
+      const { data, error } = await this.supabase
+        .from('teams')
+        .select('*')
+        .eq('match_id', matchId);
+
+      if (error || !data) {
+        return { error: 'Error loading teams' };
+      };
+      return data;
+    } catch (error:any) {
+      return { error: 'Error loading teams' };
+    } finally{
+      this.loaderService.hide();
+    }
+  };
+
+  async getScoreCard(matchId: string): Promise<any>{
+    try {
+      this.loaderService.show();
+      const { data, error } = await this.supabase
+        .from('scorecards')
+        .select('*')
+        .eq('match_id', matchId);
+
+      if (error || !data) {
+        return { error: 'Error loading scorecards' };
+      };
+      return data;
+    } catch (error:any) {
+      return { error: 'Error loading scorecards' };
     } finally{
       this.loaderService.hide();
     }
