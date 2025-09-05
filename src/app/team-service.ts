@@ -22,8 +22,8 @@ export class TeamService {
   teamAssignment = signal<Record<string,string>>({});
   matchId = signal<string>('');
 
-  constructor() { 
-    this.matchId.set(localStorage.getItem('match_id') ||'');
+  constructor() {
+    this.matchId.set(sessionStorage.getItem('match_id') ||'');
   }
 
   teamAssigedToMember(memberId: string){
@@ -108,7 +108,7 @@ export class TeamService {
     }
     
     async saveTeam(teams: Team[]){
-      if(localStorage.getItem('scoring_in_progress')){
+      if(sessionStorage.getItem('scoring_in_progress')){
         this.snackBar.open('Not allowed, Scoring in progress', 'close', {duration: 2000});
         return;
       }
@@ -128,7 +128,7 @@ export class TeamService {
     }
   
     onMemberTeamChange(member: Member, newTeamId: string): void {
-      if(localStorage.getItem('scoring_in_progress')){
+      if(sessionStorage.getItem('scoring_in_progress')){
         this.snackBar.open('Not allowed, Scoring in progress', 'close', {duration: 2000});
         return;
       }
@@ -164,7 +164,7 @@ export class TeamService {
       console.log('Updated Teams:', this.teams());
     }
     loadTeams(){
-      const matchId = localStorage.getItem('match_id');
+      const matchId = sessionStorage.getItem('match_id');
       if(!matchId){
         this.snackBar.open('No match found', 'close', {duration: 2000, panelClass: ['global-snackbar']});
         return;

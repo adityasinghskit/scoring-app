@@ -51,7 +51,7 @@ export class MemberService {
   }
 
   async oncreateTournament(){
-    if(localStorage.getItem('tournament_id')){return;}
+    if(sessionStorage.getItem('tournament_id')){return;}
     const result = await this.supabase.createTournament();
     let createTournamentError;
     if(result.error){
@@ -62,7 +62,7 @@ export class MemberService {
   }
   
   checkScoringInProgress(): boolean{
-    return !!localStorage.getItem('scoring_in_progress');
+    return !!sessionStorage.getItem('scoring_in_progress');
   }
 
   constructor() { }

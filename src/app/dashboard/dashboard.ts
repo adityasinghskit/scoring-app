@@ -16,21 +16,21 @@ export class Dashboard implements OnInit{
   user_org = signal<string|null>('');
 
   ngOnInit(): void {
-      this.user_name.set(localStorage.getItem('user_name'));
-      this.user_org.set(localStorage.getItem('user_org'));
+      this.user_name.set(sessionStorage.getItem('user_name'));
+      this.user_org.set(sessionStorage.getItem('user_org'));
       this.memberService.loadmembers();
       this.memberService.oncreateTournament();
       this.teamService.loadTeams();
   }
 
   logout(){
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('user_email');
-    localStorage.removeItem('match_id');
-    localStorage.removeItem('tournament_id');
-    localStorage.removeItem('user_name');
-    localStorage.removeItem('user_org');
-    localStorage.removeItem('team_score_card');
+    sessionStorage.removeItem('user_id');
+    sessionStorage.removeItem('user_email');
+    sessionStorage.removeItem('match_id');
+    sessionStorage.removeItem('tournament_id');
+    sessionStorage.removeItem('user_name');
+    sessionStorage.removeItem('user_org');
+    sessionStorage.removeItem('team_score_card');
     this.router.navigateByUrl("/login");
   }
 

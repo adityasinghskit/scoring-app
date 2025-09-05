@@ -30,8 +30,8 @@ export class Supabase{
   user_id = signal('');
   _session: AuthSession | null = null
   constructor() {
+    this.user_id.set(sessionStorage.getItem('user_id') || '');
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
-    this.user_id.set(localStorage.getItem('user_id') || '');
   }
   get session() {
     this.supabase.auth.getSession().then(({ data }) => {
@@ -39,6 +39,12 @@ export class Supabase{
     })
     return this._session
   } 
+
+  refreshUserId() {
+    const id = sessionStorage.getItem('user_id') || '';
+    this.user_id.set(id);
+    console.log("User ID refreshed:", id);
+  }
 
   async signup(email: string, password: string, name: string, organisation: string) {
     try {
@@ -67,7 +73,7 @@ export class Supabase{
         throw error;
       }
 
-      localStorage.setItem('user_id', data.id);
+      sessionStorage.setItem('user_id', data.id);
 
       return {};
     } catch (error: any) {
@@ -95,10 +101,11 @@ export class Supabase{
         return { error: 'Invalid email or password' };
       }
 
-      localStorage.setItem('user_id', data.id);
-      localStorage.setItem('user_email', data.email);
-      localStorage.setItem('user_name', data.name);
-      localStorage.setItem('user_org', data.organisation);
+      sessionStorage.setItem('user_id', data.id);
+      sessionStorage.setItem('user_email', data.email);
+      sessionStorage.setItem('user_name', data.name);
+      sessionStorage.setItem('user_org', data.organisation);
+      this.refreshUserId();
 
       return {};
     } catch (error: any) {
@@ -114,14 +121,14 @@ export class Supabase{
       this.loaderService.show();
       const { data, error } = await this.supabase
         .from('tournaments')
-        .insert([{ user_id: localStorage.getItem('user_id'),
+        .insert([{ user_id: sessionStorage.getItem('user_id'),
           name: 'tournament '+new Date().toISOString()
          }])
         .select()
         .single();
 
       if (error) return { error: 'Failed to create tournament' };
-      localStorage.setItem('tournament_id',data.id);
+      sessionStorage.setItem('tournament_id',data.id);
       return data;
     }finally{
       this.loaderService.hide();
@@ -259,14 +266,14 @@ export class Supabase{
         this.loaderService.show();
         const { data, error } = await this.supabase
           .from('matches')
-          .insert([{ user_id: localStorage.getItem('user_id'),
-            tournament_id: localStorage.getItem('tournament_id')
+          .insert([{ user_id: sessionStorage.getItem('user_id'),
+            tournament_id: sessionStorage.getItem('tournament_id')
            }])
           .select()
           .single();
 
         if (error) return { error: 'Failed to create match' };
-        localStorage.setItem('match_id',data.id);
+        sessionStorage.setItem('match_id',data.id);
         return data;
     } catch (error) {
       return { error: 'Failed to create match' };
@@ -277,10 +284,10 @@ export class Supabase{
 
   async addTeam(newTeams: Team[]):Promise<any>{
     this.loaderService.show();
-    if(!localStorage.getItem('match_id')){
+    if(!sessionStorage.getItem('match_id')){
       await this.createMatch();
     }
-    const matchId = localStorage.getItem('match_id');
+    const matchId = sessionStorage.getItem('match_id');
     try {
       // Delete existing teams for this match
       await this.supabase
@@ -345,12 +352,12 @@ export class Supabase{
   }
   
   async saveThrows(teamScoreCard: Record<string,Throw[]>, teams: Team[]): Promise<any>{
-    if (!localStorage.getItem('match_id')) {
+    if (!sessionStorage.getItem('match_id')) {
       return {error: 'No Match found'};
     }
     console.log("teamScoreCard: ", teamScoreCard["Team A"]);
     console.log("teams: ", JSON.stringify(teams));
-    const currentMatchId = localStorage.getItem('match_id');
+    const currentMatchId = sessionStorage.getItem('match_id');
       // Delete existing scorecards for this match
       await this.supabase
         .from('scorecards')

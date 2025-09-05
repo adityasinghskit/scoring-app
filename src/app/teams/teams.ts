@@ -16,7 +16,7 @@ export class Teams implements OnInit{
   public teamService = inject(TeamService);
   public dialogService = inject(DialogService);
   async ngOnInit(): Promise<void> {
-    if(localStorage.getItem('match_id')){
+    if(sessionStorage.getItem('match_id')){
       this.teamService.loadTeams();
     }else{
       this.teamService.initialise();

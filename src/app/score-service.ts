@@ -38,8 +38,8 @@ export class ScoreService {
 
   setMemberThrowScore(memberId: string, throwNumber: number, event: Event) {
     throwNumber ??= 0;
-    if(!localStorage.getItem('scoring_in_progress')){
-      localStorage.setItem('scoring_in_progress', 'true');
+    if(!sessionStorage.getItem('scoring_in_progress')){
+      sessionStorage.setItem('scoring_in_progress', 'true');
     }
     const teamScore = this.teamScoreCard()[this.teamService.teamAssigedToMember(memberId)];
     const input = event.target as HTMLInputElement;
@@ -55,7 +55,7 @@ export class ScoreService {
       });
     }
     }
-    // localStorage.setItem('team_score_card', JSON.stringify(this.teamScoreCard()));
+    // sessionStorage.setItem('team_score_card', JSON.stringify(this.teamScoreCard()));
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.saveThrows();
@@ -64,8 +64,8 @@ export class ScoreService {
   }
 
   saveThrows(){
-    if(!localStorage.getItem('scoring_in_progress')){
-      localStorage.setItem('scoring_in_progress', 'true');
+    if(!sessionStorage.getItem('scoring_in_progress')){
+      sessionStorage.setItem('scoring_in_progress', 'true');
     }
     this.supabase.saveThrows(this.teamScoreCard(), this.teamService.teams()).then(result => {
     if(result.error){
@@ -83,7 +83,7 @@ export class ScoreService {
         this.snackBar.open('Failed to load scoreboard', 'close', {duration: 2000, panelClass: ['global-snackbar']});
       }
       else{
-        // localStorage.setItem('team_score_card', JSON.stringify(result));
+        // sessionStorage.setItem('team_score_card', JSON.stringify(result));
         console.log('Loaded Scoreboard:', result);
         this.snackBar.open('Scoreboard loaded', 'close', {duration: 2000, panelClass: ['global-snackbar']});
       }

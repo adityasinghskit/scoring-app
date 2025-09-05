@@ -23,7 +23,7 @@ export class Score {
   private dialog = inject(MatDialog);
   matchId  = signal<string>('');
   async ngOnInit(): Promise<void> {
-    this.scoreService.matchId.set(this.activatedRoute.snapshot.paramMap.get('matchId') || localStorage.getItem('match_id') || '');
+    this.scoreService.matchId.set(this.activatedRoute.snapshot.paramMap.get('matchId') || sessionStorage.getItem('match_id') || '');
     // await this.memberService.loadmembers();
     if(this.scoreService.matchId()){
       this.scoreService.loadTeams();

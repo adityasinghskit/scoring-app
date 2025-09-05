@@ -61,7 +61,7 @@ export class PastMatches implements OnInit {
     this.loadPastMatches();
   }
   constructor() {
-    this.user_id.set(localStorage.getItem('user_id') || '');
+    this.user_id.set(sessionStorage.getItem('user_id') || '');
   }
 
   async loadPastMatches(){

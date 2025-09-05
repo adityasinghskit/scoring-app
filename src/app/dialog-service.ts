@@ -17,8 +17,8 @@ export class DialogService {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        localStorage.removeItem('match_id');
-        localStorage.removeItem('scoring_in_progress');
+        sessionStorage.removeItem('match_id');
+        sessionStorage.removeItem('scoring_in_progress');
         this.router.navigate(['/members']);
       }
     });
