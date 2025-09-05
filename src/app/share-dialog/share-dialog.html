@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Share Dashboard</h2>
+
+<mat-dialog-content>
+  <p>Copy this link:</p>
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <input matInput [value]="data.link" readonly>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-flat-button color="primary"
+          [cdkCopyToClipboard]="data.link"
+          (click)="copied()">
+    Copy Link
+  </button>
+</mat-dialog-actions>

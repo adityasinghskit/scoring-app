@@ -44,6 +44,11 @@ export const routes: Routes = [
     title: 'Score Board'
   },
   {
+    path: 'score/:matchId',
+    component: Score,
+    title: 'Score Board'
+  },
+  {
     path: 'pastMatches',
     component: PastMatches,
     title: 'Past Matches'

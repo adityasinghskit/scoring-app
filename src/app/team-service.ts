@@ -20,8 +20,11 @@ export class TeamService {
   selectedTeamSize = signal<number>(2);
   teams = signal<Team[]>([]);
   teamAssignment = signal<Record<string,string>>({});
+  matchId = signal<string>('');
 
-  constructor() { }
+  constructor() { 
+    this.matchId.set(localStorage.getItem('match_id') ||'');
+  }
 
   teamAssigedToMember(memberId: string){
     // console.log('teamAssigment', this.teamAssignment());

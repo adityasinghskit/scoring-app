@@ -20,6 +20,7 @@ export class ScoreService {
   public memberService = inject(MemberService);
   public teamService = inject(TeamService);
   teamScoreCard = signal<Record<string,Throw[]>>({});
+  matchId = signal<string>('');
 
   constructor() { }
 
@@ -76,7 +77,7 @@ export class ScoreService {
   }
 
   async loadScoreBoard(): Promise<Record<string,Throw[]>|any>{
-    const result = await this.supabase.loadScoreBoard(localStorage.getItem('match_id') ?? '', this.teamService.teams());
+    const result = await this.supabase.loadScoreBoard(this.matchId() ?? '', this.teamService.teams());
       if(result.error){
         console.error(result.error);
         this.snackBar.open('Failed to load scoreboard', 'close', {duration: 2000, panelClass: ['global-snackbar']});
@@ -111,7 +112,7 @@ export class ScoreService {
   }
 
   loadTeams(){
-    const matchId = localStorage.getItem('match_id');
+    const matchId = this.matchId();
     const teams = this.teamService.teams();
     if(!matchId){
       this.snackBar.open('No match found', 'close', {duration: 2000, panelClass: ['global-snackbar']});

@@ -1,8 +1,13 @@
 <div class="outer-div">
   <div style="max-width: 1200px; margin: auto;">
-    <div style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
-      <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Back</button>
-      <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Match Scoring</h3>
+    <div style=" display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+      <div style=" display: flex; justify-content: flex-start; align-items: center; gap: 20px;">
+        <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/dashboard"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <h3 class="heading-1"><i class="fa-solid fa-users" style="color: #2563EB;"></i> Match Scoring</h3>
+      </div>
+      <div>
+        <button class="btn btn-primary" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" (click)="openShareDialog()">Share <i class="fa-solid fa-share-nodes"></i></button>
+      </div>
     </div>
     <div class="mt-4" style=" display: flex; justify-self: flex-start; align-items: center; gap: 20px;">
       <button class="btn btn-light" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;" routerLink="/teams"><i class="fa-solid fa-arrow-left"></i> Go to Teams</button>
